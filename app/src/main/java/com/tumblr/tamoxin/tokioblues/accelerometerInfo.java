@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.hardware.SensorListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.util.Arrays;
@@ -63,6 +65,12 @@ public class accelerometerInfo extends Activity implements SensorListener{
                 +"\n" +this.getString(R.string.port) +portServer, Toast.LENGTH_LONG).show();
 
         dataPackage = new String[2];
+
+        if (android.os.Build.VERSION.SDK_INT > 9)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
 
         sender = new informationSender(ipServer,portServer);
         sender.setMessage();
@@ -172,5 +180,18 @@ public class accelerometerInfo extends Activity implements SensorListener{
     @Override
     public void onAccuracyChanged(int i, int i2)
     {
+    }
+
+    public void onViewCreated(View view, Bundle savedInstanceState)
+    {
+        int SDK_INT = android.os.Build.VERSION.SDK_INT;
+        if (SDK_INT > 8)
+        {
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                    .permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+            //your codes here
+
+        }
     }
 }
